@@ -1,5 +1,11 @@
 #!/usr/bin/python
 
+# Across a period of time, find
+#     - average
+#     - medium
+#     - first N modes
+
+
 import os
 
 import firstNMode
