@@ -1,4 +1,4 @@
-
+import math
 
 def getAverage(targetList):
     assert(len(targetList) != 0)
@@ -14,3 +14,14 @@ def getMedium(targetList):
         return sortedList[middleIndex]
     return (sortedList[middleIndex - 1] + sortedList[middleIndex]) / 2
 
+def getVariance(targetList):
+    assert(len(targetList) != 0)
+
+    n = len(targetList)
+    mean = getAverage(targetList)
+
+    sum = 0
+    for i in targetList:
+        sum += math.pow((i - mean), 2)
+
+    return sum / n

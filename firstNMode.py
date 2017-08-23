@@ -37,6 +37,22 @@ def debug_isListSorted(lst):
         assert(lst[i] == sortedLst[i])
         i += 1
 
+def getModes(targetList):
+    priceToOccurences = getPriceToOccurences(targetList)
+    occurencesToPrice = getOccurencesToPrices(priceToOccurences)
+
+    maxOccurence = -1
+    modes = []
+    for occurences, price in occurencesToPrice.items():
+        if occurences > maxOccurence:
+            maxOccurence = occurences
+            modes = price
+        elif occurences == maxOccurence:
+            modes += price
+
+    return modes
+
+
 def getFirstNModeToOccurences(targetList, n):
     priceToOccurences = getPriceToOccurences(targetList)
     occurencesToPrice = getOccurencesToPrices(priceToOccurences)

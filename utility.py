@@ -12,6 +12,17 @@ def getTitle(path):
     numOfDays = len(os.listdir(path))
     return '{} ({} days)'.format(stockNumber, numOfDays)
 
+def floatToString(flt, num):
+    if num == 2:
+        return "{0:.2f}".format(flt)
+    if num == 3:
+        return "{0:.3f}".format(flt)
+    if num == 4:
+        return "{0:.4f}".format(flt)
+
+    print("ERROR: illegal num for floatToString()")
+    assert(0)
+
 def getPriceListFromFile(filename):
     result = []
     with open(filename, 'r') as fh:
