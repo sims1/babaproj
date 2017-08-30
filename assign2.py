@@ -21,19 +21,19 @@ import utility
 
 
 def calculate(targetList):
-    calculator = simpleCalculate.Calculator()
+    calculator = simpleCalculate.Calculator(targetList)
 
-    average = calculator.getAverage(targetList)
-    medium = calculator.getMedium(targetList)
+    average = calculator.getAverage()
+    medium = calculator.getMedium()
 
     modeList = map(lambda x: utility.floatToString(x, 2), firstNMode.getModes(targetList))
     modes = '/'.join(modeList)
 
-    variance = calculator.getVariance(targetList)
-    stdDeviation = math.sqrt(variance)
+    variance = calculator.getVariance()
+    stdDeviation = calculator.getStdDeviation()
 
-    #kurtosis = 
-
+    kurtosis = calculator.getKurtosis()
+    skewness = calculator.getSkewness()
 
     # the first element in the list will be replaced by file name
     return [0,
@@ -41,11 +41,13 @@ def calculate(targetList):
             utility.floatToString(medium, 2),
             modes,
             utility.floatToString(stdDeviation, 4),
-            utility.floatToString(variance, 4)
+            utility.floatToString(variance, 4),
+            utility.floatToString(skewness, 4),
+            utility.floatToString(kurtosis, 4)
             ]
 
 
-title = ['date', 'average', 'medium', 'mode', 'stdDeviation', 'variance', 'kurtosis', 'skewness']
+title = ['date', 'average', 'medium', 'mode', 'stdDeviation', 'variance', 'skewness', 'kurtosis']
 def run(stockFolder):
     ioObject = cvsio.IO(len(title))
     ioObject.write(title)
