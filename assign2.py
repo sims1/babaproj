@@ -6,8 +6,9 @@
 #     - mode (one mode)
 #     - stdDeviation
 #     - variance
-#     - skewness
 #     - kurtosis
+#     - skewness
+
 
 
 import math
@@ -20,14 +21,18 @@ import utility
 
 
 def calculate(targetList):
-    average = simpleCalculate.getAverage(targetList)
-    medium = simpleCalculate.getMedium(targetList)
+    calculator = simpleCalculate.Calculator()
+
+    average = calculator.getAverage(targetList)
+    medium = calculator.getMedium(targetList)
 
     modeList = map(lambda x: utility.floatToString(x, 2), firstNMode.getModes(targetList))
     modes = '/'.join(modeList)
 
-    variance = simpleCalculate.getVariance(targetList)
+    variance = calculator.getVariance(targetList)
     stdDeviation = math.sqrt(variance)
+
+    #kurtosis = 
 
 
     # the first element in the list will be replaced by file name
