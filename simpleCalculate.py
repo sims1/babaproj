@@ -3,7 +3,6 @@ import math
 
 
 class Calculator:
-
     n = None
     average = None
     medium = None
@@ -12,17 +11,45 @@ class Calculator:
     kurtosis = None
     skewness = None
 
+    _min = None
+    _max = None
+    _range = None
+
     lst = None
     x_minus_mean_lst = None
 
     def __init__(self, lst):
+        assert(len(lst) > 1)
         self.lst = lst
 
     def getN(self):
         if self.n is None:
             self.n = len(self.lst)
-            assert(self.n != 0)
         return self.n
+
+    def __calculateMinAndMax(self):
+        self._min = self.lst[0]
+        self._max = self.lst[0]
+        for i in self.lst:
+            if i > self._max:
+                self._max = i
+            if i < self._min:
+                self._min = i
+
+    def getMin(self):
+        if self._min is None:
+            self.__calculateMinAndMax()
+        return self._min
+
+    def getMax(self):
+        if self._max is None:
+            self.__calculateMinAndMax()
+        return self._max
+
+    def getRange(self):
+        if self._range is None:
+            self._range = self.getMax() - self.getMin()
+        return self._range
 
     def getAverage(self):
         if self.average is None:
@@ -52,8 +79,8 @@ class Calculator:
 
     def getVariance(self):
         if self.variance is None:
-            sum = self.__get_power_of_xm_lst(2)
-            self.variance = sum / self.getN()
+            _sum = self.__get_power_of_xm_lst(2)
+            self.variance = _sum / self.getN()
         return self.variance
 
     def getStdDeviation(self):
@@ -63,17 +90,23 @@ class Calculator:
 
     def getKurtosis(self):
         if self.kurtosis is None:
-            sum = self.__get_power_of_xm_lst(4)
+            _sum = self.__get_power_of_xm_lst(4)
             quadraStd = math.pow(self.getStdDeviation(), 4)
 
-            self.kurtosis = ( sum / (self.getN()-1) / quadraStd ) - 3
+            if quadraStd == 0:
+                self.kurtosis = float('inf')
+            else:
+                self.kurtosis = ( _sum / (self.getN()-1) / quadraStd ) - 3
         return self.kurtosis
 
     def getSkewness(self):
         if self.skewness is None:
-            sum = self.__get_power_of_xm_lst(3)
+            _sum = self.__get_power_of_xm_lst(3)
             tripleSqrStd = math.pow(self.getStdDeviation(), 3)
-            self.skewness = sum / (self.getN()-1) / tripleSqrStd
+            if tripleSqrStd == 0:
+                self.skewness = float('inf')
+            else:
+                self.skewness = _sum / (self.getN()-1) / tripleSqrStd
         return self.skewness
 
 

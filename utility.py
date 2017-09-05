@@ -23,7 +23,7 @@ def floatToString(flt, num):
     print("ERROR: illegal num for floatToString()")
     assert(0)
 
-def getPriceListFromFile(filename):
+def gettt(filename):
     result = []
     with open(filename, 'r') as fh:
         lines = fh.readlines()
