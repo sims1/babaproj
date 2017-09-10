@@ -3,3 +3,6 @@ output.txt
 601699_20170818.xls
 
 data/
+bigData/
+
+__pycache__/

@@ -58,7 +58,7 @@ class Calculator:
 
     def getMedium(self):
         if self.medium is None:
-            middleIndex = self.getN() / 2
+            middleIndex = int(self.getN() / 2)
             sortedList = sorted(self.lst)
             if self.getN() % 2 == 1:
                 self.medium = sortedList[middleIndex]
@@ -68,7 +68,7 @@ class Calculator:
 
     def __get_x_minus_mean_lst(self):
         if self.x_minus_mean_lst is None:
-            self.x_minus_mean_lst = map(lambda x : x - self.getAverage(), self.lst)
+            self.x_minus_mean_lst = list(map(lambda x : x - self.getAverage(), self.lst))
         return self.x_minus_mean_lst
 
     def __get_power_of_xm_lst(self, power):

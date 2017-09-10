@@ -47,7 +47,7 @@ class Writer(object):
     fd = None
     numOfEntries = 0
 
-    def __init__(self, num):
+    def __init__(self, fileName, num):
         global fd
         global numOfEntries
 
@@ -56,7 +56,7 @@ class Writer(object):
         
         # \todo enable print by timeStamp
         #fd = open('output_{}'.format(timeStamp), 'w+')
-        fd = open('output.txt', 'w+')
+        fd = open('{}.txt'.format(fileName), 'w+')
 
     def __del__(self):
         fd.close()
