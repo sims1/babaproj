@@ -80,6 +80,7 @@ def runOnStock(stockFolder):
 
         resultList = calculate(readObject.getPriceList(), readObject.getTimeList(), readObject.getBuySellList())
         resultList[0] = fileName.replace('.csv', '')
+        print(resultList)
         writeObject.write(resultList)
 
 
@@ -125,26 +126,6 @@ def main():
     utility.printStartTimeStamp()
 
     run()
-
-    #parser.add_argument('-s', 'stockSymbol', nargs=99999, action='append', help='stock symbols')
-    #metavar=('url','name'),help='help:')
-    #args = parser.parse_args()
-
-    #baseFolder = args.baseFolder
-
-
-
-    #baseFolder = '/Users/ling/GitHub/babaProj/data'
-    #stockList = ['000725', '000831', '600392']
-
-
-    #stock = '601699'
-
-
-    #path = os.path.join(baseFolder, stock)
-
-
-    
 
     utility.printEndTimeStamp()
 

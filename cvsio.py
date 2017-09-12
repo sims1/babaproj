@@ -8,13 +8,14 @@ class TickType(Enum):
     SELL = 2
 
 class Reader(object):
-    timeList = []
-    priceList = []
-    buySellList = []
-    tickNumList = []
-
     def __init__(self, fileName):
         assert(fileName.endswith('.csv'))
+
+        self.timeList = []
+        self.priceList = []
+        self.buySellList = []
+        self.tickNumList = []
+
         with open(fileName, 'r') as fh:
             lines = fh.readlines()
             for line in lines:

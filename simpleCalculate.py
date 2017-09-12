@@ -3,24 +3,22 @@ import math
 
 
 class Calculator:
-    n = None
-    average = None
-    medium = None
-    variance = None
-    stdDeviation = None
-    kurtosis = None
-    skewness = None
-
-    _min = None
-    _max = None
-    _range = None
-
-    lst = None
-    x_minus_mean_lst = None
-
     def __init__(self, lst):
         assert(len(lst) > 1)
         self.lst = lst
+
+        self.n = None
+        self.average = None
+        self.medium = None
+        self.variance = None
+        self.stdDeviation = None
+        self.kurtosis = None
+        self.skewness = None
+        self._min = None
+        self._max = None
+        self._range = None
+        self.x_minus_mean_lst = None
+
 
     def getN(self):
         if self.n is None:
