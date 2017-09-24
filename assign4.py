@@ -80,7 +80,6 @@ def runOnStock(stockFolder):
 
         resultList = calculate(readObject.getPriceList(), readObject.getTimeList(), readObject.getBuySellList())
         resultList[0] = fileName.replace('.csv', '')
-        print(resultList)
         writeObject.write(resultList)
 
 
