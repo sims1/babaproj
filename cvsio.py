@@ -2,68 +2,67 @@ import datetime
 import os
 
 class Reader(object):
-    allList = []
-    closeList = []
-    
+    latestDate = None # this is only useful for getLatest()
+
     def __init__(self, fileName):
-        assert(fileName.endswith('.txt'))
+        self.fileName = fileName
+        assert(fileName.endswith('.csv'))
+        self.stockSymbolWithComma = os.path.basename(fileName).replace('.csv', '') + ','
+        self.dateToData = None
 
-        self.allList = []
-        self.closeList = []
-
-        with open(fileName, 'r', encoding = 'ISO-8859-1') as fh:
+        #with open(fileName, 'r', encoding = 'ISO-8859-1') as fh:
+        with open(fileName, 'r') as fh:
             lines = fh.readlines()
-            assert(len(lines) > 2)
-            lines = lines[2:]
+            assert(len(lines) > 1)
+            self.lines = lines
 
-            for line in lines:
-                if len(line) < 1:
-                    continue
-                line = line[:-1] # remove '\n'
-                splittedLine = line.split('\t')
-                if len(splittedLine) != 7:
-                    continue
+    def getTitle(self):
+        return 'stock,' + self.lines[0]
 
-                self.allList.append(splittedLine)
-                self.closeList.append(float(splittedLine[4]))
+    def getLatest(self):
+        if self.__getLatestDate() != Reader.latestDate:
+            print('Warning: file \'{}\' does not match the latest date \'{}\' '.format(self.fileName, Reader.latestDate))
+            return ''
+        return self.stockSymbolWithComma + self.lines[-1]
 
-        if len(self.closeList) < 2:
-            print('WARNING: file {} is abnormal, please manually inspect it.'.format(fileName))
+    def __getLatestDate(self):
+        if Reader.latestDate == None:
+            latestLine = self.lines[-1]
+            Reader.latestDate = latestLine.split(',', 1)
+        return Reader.latestDate
 
-    def getAllList(self):
-        return self.allList
+    def __loadDateToData(self):
+        self.dateToData = {}
 
-    def getCloseList(self):
-        return self.closeList
+        dataLines = self.lines[1:]
+        for line in dataLines:
+            if len(line) < 1:
+                continue
+            splittedLine = line.split(',', 1)
+            if len(splittedLine) < 2:
+                continue
+            dateKey = splittedLine[0]
+            self.dateToData[dateKey] = line
+
+    def getByDate(self, date):
+        if self.dateToData == None:
+            self.__loadDateToData()
+
+        if date not in self.dateToData:
+            print('Warning: date \'{}\' does not exist in file \'{}\''.format(date, self.fileName))
+            return ''
+        return self.stockSymbolWithComma + self.dateToData[date]
 
 
 class Writer(object):
-    titleStr = None
-    def __init__(self, fileName, titleList, ratioNumberList):
+    def __init__(self, fileName, title):
         self.fileName = fileName
-        if Writer.titleStr == None:
-            lst = titleList + list(map(lambda x: 'EMA' + str(x), ratioNumberList)) \
-                            + list(map(lambda x: 'STD' + str(x), ratioNumberList)) \
-                            + list(map(lambda x: 'VAR' + str(x), ratioNumberList))
-            Writer.titleStr = ','.join(lst) + '\n'
+        if title == None:
+            return
+        self.write(title)
 
-    def writeContent(self, allList, listOfRatioList):
-        assert(len(listOfRatioList) != 0)
+    def write(self, content):
+        with open(self.fileName, 'a') as fd:
+            fd.write(content)
 
-        size = len(allList)
-        for ratioList in listOfRatioList:
-            assert(len(ratioList) == size)
-
-        fd = open('{}.csv'.format(self.fileName), 'a+')
-        fd.write(Writer.titleStr)
-
-        i = 0;
-        while i < size:
-            lst = allList[i]
-            for ratioList in listOfRatioList:
-                lst.append(str(ratioList[i]))
-            fd.write(','.join(lst) + '\n')
-            i += 1
-
-        fd.close()
 

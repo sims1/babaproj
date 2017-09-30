@@ -16,8 +16,9 @@
 import math
 import optparse
 import os
+import shutil
 
-import cvsio
+import txtio
 import simpleCalculate
 import utility
 
@@ -68,7 +69,7 @@ def runOnStock(stockFile, outputFolderName):
     inputFileName = os.path.basename(os.path.normpath(stockFile)).replace('.txt', '')
     outputFileName = os.path.join(outputFolderName, inputFileName)
 
-    readObject = cvsio.Reader(stockFile)
+    readObject = txtio.Reader(stockFile)
     emaList = []
     stdList = []
     varList = []
@@ -86,7 +87,7 @@ def runOnStock(stockFile, outputFolderName):
         stdList.append(stdVarResult[0])
         varList.append(stdVarResult[0])
         
-    writeObject = cvsio.Writer(outputFileName, titleList, ratioNumberList)
+    writeObject = txtio.Writer(outputFileName, titleList, ratioNumberList)
     writeObject.writeContent(readObject.getAllList(), emaList + stdList + varList)
 
 
@@ -114,9 +115,11 @@ def run():
     else:
         outputFolderName = outputFolder
 
-    if not doOverwrite:
-        if os.path.exists(outputFolderName):
-            print('Error: \'{}\' folder exists already, please use -f option, that allow you to overwrite it'.format(outputFolderName))
+    if os.path.exists(outputFolderName):
+        if doOverwrite:
+            shutil.rmtree(outputFolderName)
+        else:
+            print('Error: \'{}\' folder exists already, you can use -f option to allow overwrite'.format(outputFolderName))
             exit(-1)
     os.makedirs(outputFolderName)
 
