@@ -8,7 +8,7 @@ import math
 import optparse
 import os
 
-import cvsio
+import metricDataIO
 import utility
     
 
@@ -19,11 +19,11 @@ def pickStock(stockFile, outputFile, date):
     if not stockFile.endswith('.csv'):
         return
 
-    reader = cvsio.Reader(stockFile)
+    reader = metricDataIO.Reader(stockFile)
 
     doNeedTitle = not os.path.isfile(outputFile)
     title = reader.getTitle() if doNeedTitle else None
-    writer = cvsio.Writer(outputFile, title)
+    writer = metricDataIO.Writer(outputFile, title)
 
     if date == None:
         writer.write(reader.getLatest())
