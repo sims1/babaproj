@@ -7,11 +7,6 @@ def printStartTimeStamp():
 def printEndTimeStamp():
     print('finish time: {}'.format(datetime.datetime.now()))
 
-def getTimeStampedOutPutName():
-    str = '{}'.format(datetime.datetime.now())
-    str = str.replace('-', '').replace(' ', '_'). replace(':', '_').replace('.', '')
-    return 'output_' + str
-
 def getTitle(path):
     stockNumber = os.path.basename(os.path.normpath(path))
     numOfDays = len(os.listdir(path))

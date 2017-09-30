@@ -1,69 +1,69 @@
 import datetime
 import os
 
-from enum import Enum
-
-class TickType(Enum):
-    BUY = 1
-    SELL = 2
-
 class Reader(object):
+    allList = []
+    closeList = []
+    
     def __init__(self, fileName):
-        assert(fileName.endswith('.csv'))
+        assert(fileName.endswith('.txt'))
 
-        self.timeList = []
-        self.priceList = []
-        self.buySellList = []
-        self.tickNumList = []
+        self.allList = []
+        self.closeList = []
 
-        with open(fileName, 'r') as fh:
+        with open(fileName, 'r', encoding = 'ISO-8859-1') as fh:
             lines = fh.readlines()
+            assert(len(lines) > 2)
+            lines = lines[2:]
+
             for line in lines:
-                splitted = line.split(',')
-                if len(splitted) != 4:
+                if len(line) < 1:
                     continue
-                self.timeList.append(int(splitted[0]))
-                self.priceList.append(float(splitted[1]))
-                if splitted[2] == 'B':
-                    self.buySellList.append(TickType.BUY)
-                elif splitted[2] == 'S':
-                    self.buySellList.append(TickType.SELL)
-                else:
-                    print('ERROR: unexpected buySell type')
-                    exit(-1)
-                self.tickNumList.append(int(splitted[3]))
+                line = line[:-1] # remove '\n'
+                splittedLine = line.split('\t')
+                if len(splittedLine) != 7:
+                    continue
 
-    def getPriceList(self):
-        return self.priceList
+                self.allList.append(splittedLine)
+                self.closeList.append(float(splittedLine[4]))
 
-    def getTimeList(self):
-        return self.timeList
+        if len(self.closeList) < 2:
+            print('WARNING: file {} is abnormal, please manually inspect it.'.format(fileName))
 
-    def getBuySellList(self):
-        return self.buySellList
+    def getAllList(self):
+        return self.allList
 
-        
+    def getCloseList(self):
+        return self.closeList
+
 
 class Writer(object):
-    fd = None
-    numOfEntries = 0
+    titleStr = None
+    def __init__(self, fileName, titleList, ratioNumberList):
+        self.fileName = fileName
+        if Writer.titleStr == None:
+            lst = titleList + list(map(lambda x: 'EMA' + str(x), ratioNumberList)) \
+                            + list(map(lambda x: 'STD' + str(x), ratioNumberList)) \
+                            + list(map(lambda x: 'VAR' + str(x), ratioNumberList))
+            Writer.titleStr = ','.join(lst) + '\n'
 
-    def __init__(self, fileName, num):
-        global fd
-        global numOfEntries
+    def writeContent(self, allList, listOfRatioList):
+        assert(len(listOfRatioList) != 0)
 
-        numOfEntries = num
-        timeStamp = '{}'.format(datetime.datetime.now()).replace('-', '_')
-        
-        # \todo enable print by timeStamp
-        #fd = open('output_{}'.format(timeStamp), 'w+')
-        fd = open('{}.txt'.format(fileName), 'w+')
+        size = len(allList)
+        for ratioList in listOfRatioList:
+            assert(len(ratioList) == size)
 
-    def __del__(self):
+        fd = open('{}.csv'.format(self.fileName), 'a+')
+        fd.write(Writer.titleStr)
+
+        i = 0;
+        while i < size:
+            lst = allList[i]
+            for ratioList in listOfRatioList:
+                lst.append(str(ratioList[i]))
+            fd.write(','.join(lst) + '\n')
+            i += 1
+
         fd.close()
-
-    def write(self, lst):
-        #assert(len(lst) == numOfEntries)
-        fd.write(','.join(lst) + '\n')
-
 

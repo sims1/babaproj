@@ -4,5 +4,6 @@ output.txt
 
 data/
 bigData/
+assign5Data/
 
 __pycache__/
