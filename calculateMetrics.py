@@ -92,44 +92,46 @@ def runOnStock(stockFile, outputFolderName):
 
 def run():
     parser = optparse.OptionParser()
-    parser.add_option('-f', '--base-folder', action='store', dest='baseFolder',
-        help="Expecting folders with stock name under this folder", default=None)
-    parser.add_option('-s', '--stock-file', action='store', dest='stockFile',
-        help="Expecting folders with stock name under this folder", default=None)
+    parser.add_option('-i', '--input-stock', action='store', dest='inputStock',
+        help='Expecting folders with stock name under this folder or a txt stock file', default=None)
+    parser.add_option('-o', '--output-folder', action='store', dest='outputFolder',
+        help='The calcualted matrics will be stored in the folder', default=None)
+    parser.add_option('-f', action='store_true', dest='doOverwrite')
 
     options, args = parser.parse_args()
 
-    baseFolder = options.baseFolder
-    stockFile = options.stockFile
+    inputStock = options.inputStock
+    outputFolder = options.outputFolder
+    doOverwrite = options.doOverwrite
 
-    if baseFolder == None and stockFile == None:
-        print('Error: no stock path specified, please run --help for more information')
-        exit(-1)
-    if baseFolder != None and stockFile != None:
-        print('Error: base folder and stock file path cannot be both specified, please run --help for more information')
+    if inputStock == None:
+        print('Error: no stock path not stock file specified, please run --help for more information')
         exit(-1)
 
-    outputFolderName = utility.getTimeStampedOutPutName()
-    assert(not os.path.exists(outputFolderName))
+    outputFolderName = ""
+    if outputFolder == None:
+        outputFolderName = utility.getTimeStampedOutPutName()
+    else:
+        outputFolderName = outputFolder
+
+    if not doOverwrite:
+        if os.path.exists(outputFolderName):
+            print('Error: \'{}\' folder exists already, please use -f option, that allow you to overwrite it'.format(outputFolderName))
+            exit(-1)
     os.makedirs(outputFolderName)
 
-    if stockFile != None:
-        if not os.path.isfile(stockFile):
-            print('ERROR: Path "{}" does not exist'.format(stockFile))
-            exit(-1)
-
-        runOnStock(stockFile, outputFolderName)
-
-    if baseFolder != None:
-        if not os.path.isdir(baseFolder):
-            print('ERROR: Path "{}" does not exist'.format(baseFolder))
-            exit(-1)
-        for stock in os.listdir(baseFolder):
-            stockDir = os.path.join(baseFolder, stock)
+    if os.path.isfile(inputStock):
+        runOnStock(inputStock, outputFolderName)
+    elif os.path.isdir(inputStock):
+        for stock in os.listdir(inputStock):
+            stockDir = os.path.join(inputStock, stock)
             if os.path.isfile(stockDir):
-                runOnStock(os.path.join(baseFolder, stock), outputFolderName)
+                runOnStock(os.path.join(inputStock, stock), outputFolderName)
                 print('.', end='', flush=True)
         print()
+    else:
+        print('Error: {} is neither a stock folder nor a stock file'.format(inputStock))
+        exit(-1)
 
 
 
