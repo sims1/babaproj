@@ -2,8 +2,9 @@
 output.txt
 601699_20170818.xls
 
+assign5Data/
 data/
 bigData/
-assign5Data/
+output/
 
 __pycache__/

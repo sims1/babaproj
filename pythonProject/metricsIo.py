@@ -27,8 +27,8 @@ class Reader(object):
                 self.allList.append(splittedLine)
                 self.closeList.append(float(splittedLine[4]))
 
-        if len(self.closeList) < 2:
-            print('WARNING: file {} is abnormal, please manually inspect it.'.format(fileName))
+        #if len(self.closeList) < 2:
+            #print('WARNING: file {} is abnormal, please manually inspect it.'.format(fileName))
 
     def getAllList(self):
         return self.allList

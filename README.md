@@ -26,6 +26,7 @@ optional options:
 3. ./stockFilter.py -i inputFile -s -ema
 required options:
         [ -i input file/folder name ]
+        [ -o output file name, if not specified, print directly']
         [ -s strategy, current one is -ema, which is
             close >= EMA21 && close >= EMA60 && close >= EMA200, and
             close <= EMA21 * 1.10 ]

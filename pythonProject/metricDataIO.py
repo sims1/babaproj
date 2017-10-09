@@ -21,7 +21,7 @@ class Reader(object):
 
     def getLatest(self):
         if self.__getLatestDate() != Reader.latestDate:
-            print('Warning: file \'{}\' does not match the latest date \'{}\' '.format(self.fileName, Reader.latestDate))
+            #print('Warning: file \'{}\' does not match the latest date \'{}\' '.format(self.fileName, Reader.latestDate))
             return ''
         return self.stockSymbolWithComma + self.lines[-1]
 
@@ -49,7 +49,7 @@ class Reader(object):
             self.__loadDateToData()
 
         if date not in self.dateToData:
-            print('Warning: date \'{}\' does not exist in file \'{}\''.format(date, self.fileName))
+            #print('Warning: date \'{}\' does not exist in file \'{}\''.format(date, self.fileName))
             return ''
         return self.stockSymbolWithComma + self.dateToData[date]
 

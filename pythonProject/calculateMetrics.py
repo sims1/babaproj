@@ -18,25 +18,29 @@ import optparse
 import os
 import shutil
 
-import txtio
-import simpleCalculate
+import metricsIo
+import buffedCalculate
 import utility
 
 def calculateStdVar(closeList, varN):
     if len(closeList) < varN:
         return []
-    buffer = closeList[:60]
-    resultStd = [0] * varN
-    resultVar = [0] * varN
+
+    buffer = closeList[:varN]
+    resultStd = [0] * (varN-1)
+    resultVar = [0] * (varN-1)
+
+    calculator = buffedCalculate.Calculator(buffer)
+    resultStd.append(calculator.getStdDeviation())
+    resultVar.append(calculator.getVariance())
 
     i = varN
     while i < len(closeList):
         buffer.pop(0)
         buffer.append(closeList[i])
-        calculator = simpleCalculate.Calculator(buffer)
+        calculator = buffedCalculate.Calculator(buffer)
         resultStd.append(calculator.getStdDeviation())
         resultVar.append(calculator.getVariance())
-
         i += 1
 
     return [resultStd, resultVar]
@@ -47,8 +51,7 @@ def calculateEma(closeList, emaN):
         return []   # warning reported in csvio
     assert(emaN > 1)
 
-    resultList = []
-    resultList.append(closeList[0])
+    resultList = [closeList[0]]
 
     i = 1
     while i < len(closeList):
@@ -69,7 +72,7 @@ def runOnStock(stockFile, outputFolderName):
     inputFileName = os.path.basename(os.path.normpath(stockFile)).replace('.txt', '')
     outputFileName = os.path.join(outputFolderName, inputFileName)
 
-    readObject = txtio.Reader(stockFile)
+    readObject = metricsIo.Reader(stockFile)
     emaList = []
     stdList = []
     varList = []
@@ -77,17 +80,19 @@ def runOnStock(stockFile, outputFolderName):
     for ratioN in ratioNumberList:
         emaResult = calculateEma(readObject.getCloseList(), ratioN)
         if len(emaResult) == 0:
+            #print('Warning: ema calculation error for file \'{}\''.format(stockFile))
             return  # calculation error, abort for this file
 
         stdVarResult = calculateStdVar(readObject.getCloseList(), ratioN)
         if len(stdVarResult) != 2 or len(stdVarResult[0]) == 0 or len(stdVarResult[1]) == 0:
+            #print('Warning: std/var calculation error for file \'{}\''.format(stockFile))
             return  # calculation error, abort for this file
 
         emaList.append(emaResult)
         stdList.append(stdVarResult[0])
-        varList.append(stdVarResult[0])
+        varList.append(stdVarResult[1])
         
-    writeObject = txtio.Writer(outputFileName, titleList, ratioNumberList)
+    writeObject = metricsIo.Writer(outputFileName, titleList, ratioNumberList)
     writeObject.writeContent(readObject.getAllList(), emaList + stdList + varList)
 
 
