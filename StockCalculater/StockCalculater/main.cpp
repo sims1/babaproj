@@ -11,6 +11,6 @@
 using namespace std;
 int main(int argc, const char * argv[]) {
     // insert code here...
-    cout << "hello from windows git";
+    cout << "hello from windows git(vs)";
     return 0;
 }
