@@ -8,3 +8,6 @@ bigData/
 output/
 
 __pycache__/
+
+StockCalculater/StockCalculater.xcodeproj/*
+StockCalculater/StockCalculater.xcodeproj/**
